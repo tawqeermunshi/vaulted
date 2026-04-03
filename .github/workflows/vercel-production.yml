@@ -1,0 +1,26 @@
+# Deploy to Vercel production on every push to `main`.
+#
+# One-time: GitHub → repo → Settings → Secrets and variables → Actions
+# → New repository secret: VERCEL_TOKEN
+# Create token: https://vercel.com/account/tokens
+#
+# Native “Connected Git” in the Vercel UI is separate; if you link the repo
+# there too, you’ll get duplicate deploys — disable one or the other.
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: team_edAt2apZiuOWkRIPPrME9E3a
+          vercel-project-id: prj_MN5qYfEgFWFyPTl8Wbp4XgVBBvM5
+          vercel-args: "--prod"
