@@ -25,7 +25,7 @@ export async function GET(_req: Request, { params }: Params) {
 
   try {
     // Lazy-initialize
-    const existing = await redis.get(`vaulted:price:${id}`)
+    const existing = redis ? await redis.get(`vaulted:price:${id}`) : null
     if (existing === null) {
       const startPrice = initializePrice(product.originalPrice)
       await setPrice(id, startPrice)

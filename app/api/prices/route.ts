@@ -16,7 +16,7 @@ export async function GET() {
     const entries = await Promise.all(
       PRODUCTS.map(async (p) => {
         // Lazy-initialize: if no price in Redis yet, set a starting price
-        const existing = await redis.get(`vaulted:price:${p.id}`)
+        const existing = redis ? await redis.get(`vaulted:price:${p.id}`) : null
         if (existing === null) {
           const startPrice = initializePrice(p.originalPrice)
           await setPrice(p.id, startPrice)
