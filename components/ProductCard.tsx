@@ -2,8 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Product, getDiscount, CONDITION_LABELS } from "@/lib/data";
 import LivePrice from "./LivePrice";
-import { getCurrentPrice } from "@/lib/redis";
-import { initializePrice } from "@/lib/priceEngine";
 
 interface ProductCardProps {
   product: Product;
@@ -77,17 +75,6 @@ export default function ProductCard({
             initialPrice={startPrice}
             variant="card"
           />
-
-          {/* Seller */}
-          {variant === "default" && (
-            <div className="mt-2 flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-gold" />
-              <span className="text-[10px] text-stone">
-                {product.seller.name}
-                {product.seller.verified && " · Verified Seller"}
-              </span>
-            </div>
-          )}
         </div>
       </div>
     </Link>

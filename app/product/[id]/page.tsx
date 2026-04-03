@@ -5,8 +5,7 @@ import { PRODUCTS, CONDITION_LABELS } from "@/lib/data";
 import ProductCard from "@/components/ProductCard";
 import LivePrice from "@/components/LivePrice";
 import ViewRecorder from "@/components/ViewRecorder";
-import { getCurrentPrice } from "@/lib/redis";
-import { initializePrice } from "@/lib/priceEngine";
+import { getOrInitPrice } from "@/lib/redis";
 
 // Product detail is dynamic — price changes every tick
 export const dynamic = "force-dynamic";
@@ -22,10 +21,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   if (!product) notFound();
 
   // Fetch current price server-side for the initial render (no flash of wrong price)
-  let initialPrice = await getCurrentPrice(product.id);
-  if (initialPrice === null) {
-    initialPrice = initializePrice(product.originalPrice);
-  }
+  const initialPrice = await getOrInitPrice(product.id, product.originalPrice);
 
   const related = PRODUCTS.filter(
     (p) =>
@@ -149,9 +145,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <button className="w-full bg-charcoal text-warm-white text-xs tracking-widest uppercase py-4 hover:bg-charcoal-soft transition-colors">
                 Purchase Now
               </button>
-              <button className="w-full border border-stone-light text-charcoal text-xs tracking-widest uppercase py-4 hover:border-charcoal transition-colors">
-                Make an Offer
-              </button>
             </div>
 
             {/* Trust signals */}
@@ -176,29 +169,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <p className="text-sm text-stone-dark leading-relaxed">{product.description}</p>
             </div>
 
-            {/* Seller */}
-            <div className="mt-8 p-4 border border-stone-light/50">
-              <h3 className="text-[10px] tracking-widest uppercase text-stone mb-3">Seller</h3>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-charcoal text-sm">{product.seller.name}</span>
-                    {product.seller.verified && (
-                      <span className="text-[9px] tracking-widest uppercase bg-gold/10 text-gold-muted px-2 py-0.5">
-                        Verified
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-stone mt-1">
-                    {product.seller.location} ·{" "}
-                    <span className="text-gold">★ {product.seller.rating}</span>{" "}
-                    · {product.seller.salesCount} sales
-                  </p>
-                </div>
-                <button className="text-[10px] tracking-widest uppercase border border-stone-light text-stone-dark px-3 py-2 hover:border-charcoal transition-colors">
-                  Message
-                </button>
-              </div>
+            <div className="mt-8 p-4 border border-stone-light/50 bg-cream/30">
+              <h3 className="text-[10px] tracking-widest uppercase text-stone mb-2">VAULTED inventory</h3>
+              <p className="text-xs text-stone-dark leading-relaxed">
+                We acquire, authenticate, and list every piece ourselves — so you shop curated stock with a single standard of quality.
+              </p>
             </div>
           </div>
         </div>

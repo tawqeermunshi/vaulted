@@ -1,4 +1,5 @@
 import { Redis } from "@upstash/redis"
+import { initializePrice } from "@/lib/priceEngine"
 
 const redisUrl   = process.env.UPSTASH_REDIS_REST_URL
 const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN
@@ -80,10 +81,16 @@ export async function getLivePrice(id: string, basePrice: number): Promise<LiveP
   const price = current ?? basePrice
 
   const oldest = history[history.length - 1]
-  const change24h =
+  let change24h =
     oldest && oldest.price !== 0
       ? parseFloat((((price - oldest.price) / oldest.price) * 100).toFixed(2))
       : 0
+
+  if (change24h === 0 && history.length < 2) {
+    let h = 0
+    for (let i = 0; i < id.length; i++) h = (Math.imul(31, h) + id.charCodeAt(i)) | 0
+    change24h = parseFloat((((Math.abs(h) % 1000) / 1000) * 11 - 5.5).toFixed(2))
+  }
 
   return { current: price, history, flash, change24h, demandViews }
 }
@@ -95,12 +102,47 @@ export async function setPrice(id: string, price: number): Promise<void> {
   await redis.set(k.price(id), price)
 }
 
-export async function pushHistory(id: string, price: number): Promise<void> {
+export async function pushHistory(
+  id: string,
+  price: number,
+  ts: number = Date.now()
+): Promise<void> {
   if (!redis) return
-  const point: PricePoint = { price, ts: Date.now() }
+  const point: PricePoint = { price, ts }
   const key = k.history(id)
   await redis.lpush(key, point)
   await redis.ltrim(key, 0, 287)
+}
+
+/**
+ * Returns persisted live price, or lazily initializes Redis with a 24h baseline
+ * so change% is non-zero before the first cron tick.
+ */
+export async function getOrInitPrice(
+  id: string,
+  originalPrice: number
+): Promise<number> {
+  if (!redis) return initializePrice(originalPrice)
+
+  const cur = await getCurrentPrice(id)
+  if (cur !== null) return cur
+
+  const startPrice = initializePrice(originalPrice)
+  const dir = Math.random() < 0.5 ? -1 : 1
+  const pct = 0.025 + Math.random() * 0.055
+  let open24h = Math.round(startPrice * (1 + dir * pct))
+  const lo = Math.round(originalPrice * 0.25)
+  const hi = Math.round(originalPrice * 1.12)
+  open24h = Math.max(lo, Math.min(hi, open24h))
+  if (open24h === startPrice) {
+    const bump = Math.max(1, Math.round(startPrice * 0.035))
+    open24h = Math.max(lo, Math.min(hi, startPrice + (Math.random() < 0.5 ? -bump : bump)))
+  }
+
+  await pushHistory(id, open24h, Date.now() - 24 * 60 * 60 * 1000)
+  await pushHistory(id, startPrice)
+  await setPrice(id, startPrice)
+  return startPrice
 }
 
 export async function setFlash(id: string, flash: FlashState): Promise<void> {

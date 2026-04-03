@@ -5,8 +5,7 @@
  */
 import { NextResponse } from "next/server"
 import { PRODUCTS } from "@/lib/data"
-import { redis, getLivePrice, setPrice, pushHistory } from "@/lib/redis"
-import { initializePrice } from "@/lib/priceEngine"
+import { getLivePrice, getOrInitPrice } from "@/lib/redis"
 
 export const dynamic = "force-dynamic"
 
@@ -15,13 +14,7 @@ export async function GET() {
     // Fetch live price for every product in parallel
     const entries = await Promise.all(
       PRODUCTS.map(async (p) => {
-        // Lazy-initialize: if no price in Redis yet, set a starting price
-        const existing = redis ? await redis.get(`vaulted:price:${p.id}`) : null
-        if (existing === null) {
-          const startPrice = initializePrice(p.originalPrice)
-          await setPrice(p.id, startPrice)
-          await pushHistory(p.id, startPrice)
-        }
+        await getOrInitPrice(p.id, p.originalPrice)
 
         const live = await getLivePrice(p.id, p.originalPrice)
         return [

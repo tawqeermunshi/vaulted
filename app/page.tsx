@@ -1,7 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
-import { PRODUCTS, BRANDS, formatPrice } from "@/lib/data";
+import MarketTicker from "@/components/MarketTicker";
+import VaultPricingExplainer from "@/components/VaultPricingExplainer";
+import TodaysMovers from "@/components/TodaysMovers";
+import { PRODUCTS, BRANDS } from "@/lib/data";
+import { HERO_EDITORIAL, SELL_CTA_IMAGE } from "@/lib/productImages";
 
 const FEATURED = PRODUCTS.filter((p) => p.featured).slice(0, 6);
 
@@ -28,7 +32,7 @@ export default function HomePage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&auto=format&fit=crop&q=80"
+            src={HERO_EDITORIAL}
             alt="Luxury fashion editorial"
             fill
             className="object-cover opacity-40"
@@ -98,21 +102,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* BRAND MARQUEE */}
-      <section className="bg-charcoal-soft border-t border-b border-stone/20 py-5 overflow-hidden">
-        <div className="flex">
-          <div className="flex gap-12 animate-marquee whitespace-nowrap">
-            {[...BRAND_NAMES, ...BRAND_NAMES].map((brand, i) => (
-              <span
-                key={i}
-                className="font-serif text-base md:text-lg text-stone tracking-[0.15em] uppercase px-4"
-              >
-                {brand}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* LIVE MARKET TICKER */}
+      <MarketTicker />
 
       {/* EDITORIAL STATEMENT */}
       <section className="py-20 md:py-32 px-6 lg:px-12 max-w-7xl mx-auto">
@@ -130,12 +121,12 @@ export default function HomePage() {
           <div>
             <p className="text-stone-dark text-lg leading-relaxed mb-6">
               A Birkin held once. A Chanel worn twice. These pieces deserve more
-              than a wardrobe shelf. VAULTED brings together discerning sellers
-              and aspirational buyers in a marketplace built on trust.
+              than a wardrobe shelf. VAULTED curates authenticated pre-loved luxury
+              and prices it like a living market.
             </p>
             <p className="text-stone-dark text-base leading-relaxed">
-              Every item is expertly authenticated. Every seller is verified.
-              Every purchase is protected. This is luxury resale done right.
+              Every item is expertly authenticated. We own our inventory before it
+              hits the site. Every purchase is protected. This is luxury resale done right.
             </p>
           </div>
         </div>
@@ -178,6 +169,12 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* TODAY'S MOVERS */}
+      <TodaysMovers />
+
+      {/* VAULT PRICING EXPLAINER */}
+      <VaultPricingExplainer />
+
       {/* HOW IT WORKS */}
       <section className="bg-cream py-20 md:py-28 px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
@@ -195,7 +192,7 @@ export default function HomePage() {
               {
                 step: "01",
                 title: "Browse & Discover",
-                body: "Explore thousands of authenticated luxury pieces from verified sellers worldwide. Filter by brand, condition, price, and category.",
+                body: "Explore authenticated luxury from the houses you love. Filter by brand, condition, price, and category.",
                 icon: (
                   <svg
                     className="w-8 h-8"
@@ -328,8 +325,8 @@ export default function HomePage() {
                 body: "Every piece is reviewed by our team of luxury specialists with combined decades of experience.",
               },
               {
-                title: "Verified Sellers",
-                body: "All sellers go through identity verification and agree to our strict condition and authenticity standards.",
+                title: "Vault-owned stock",
+                body: "We buy and authenticate before listing — one standard, no anonymous third parties.",
               },
               {
                 title: "Buyer Protection",
@@ -356,7 +353,7 @@ export default function HomePage() {
       <section className="relative py-24 md:py-36 px-6 lg:px-12 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&auto=format&fit=crop&q=80"
+            src={SELL_CTA_IMAGE}
             alt="Sell your luxury items"
             fill
             className="object-cover opacity-15"

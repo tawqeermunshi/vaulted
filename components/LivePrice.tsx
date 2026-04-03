@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import type { FlashState } from "@/lib/redis"
+import { formatPrice } from "@/lib/data"
 import PriceSparkline from "./PriceSparkline"
 import FlashBadge from "./FlashBadge"
 
@@ -21,14 +22,6 @@ interface Props {
 }
 
 const POLL_INTERVAL_MS = 30_000   // 30 seconds
-
-function formatPrice(n: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(n)
-}
 
 /**
  * LivePrice polls /api/prices/[id] every 30 seconds and animates price changes.

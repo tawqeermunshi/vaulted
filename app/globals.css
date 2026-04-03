@@ -62,7 +62,7 @@ body {
 }
 
 .animate-marquee {
-  animation: marquee 35s linear infinite;
+  animation: marquee 85s linear infinite;
 }
 
 @keyframes fade-up {

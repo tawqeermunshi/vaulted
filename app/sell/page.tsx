@@ -205,7 +205,7 @@ export default function SellPage() {
 
             <div className="grid sm:grid-cols-2 gap-6">
               <FormField
-                label="Asking Price (USD)"
+                label="Asking Price (INR)"
                 type="number"
                 placeholder="e.g. 2500"
               />

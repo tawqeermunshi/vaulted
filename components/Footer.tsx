@@ -4,8 +4,10 @@ const SHOP_LINKS = [
   { href: "/browse", label: "All Items" },
   { href: "/browse?category=bags", label: "Bags" },
   { href: "/browse?category=shoes", label: "Shoes" },
+  { href: "/browse?category=clothing", label: "Clothing" },
   { href: "/browse?category=accessories", label: "Accessories" },
   { href: "/browse?category=belts", label: "Belts" },
+  { href: "/browse?category=jewelry", label: "Jewelry" },
 ];
 
 const BRAND_LINKS = [
@@ -40,7 +42,7 @@ export default function Footer() {
             </Link>
             <p className="mt-4 text-stone text-sm leading-relaxed max-w-xs">
               The destination for authenticated pre-loved luxury. Every piece
-              verified. Every seller trusted. Every purchase guaranteed.
+              verified. Every listing curated by us. Every purchase guaranteed.
             </p>
             {/* Newsletter */}
             <div className="mt-8">

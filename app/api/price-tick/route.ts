@@ -8,15 +8,15 @@
 import { NextResponse } from "next/server"
 import { PRODUCTS } from "@/lib/data"
 import {
-  getCurrentPrice,
   getFlash,
   getLastFlashTime,
   getDemandViews,
+  getOrInitPrice,
   setPrice,
   pushHistory,
   setFlash,
 } from "@/lib/redis"
-import { initializePrice, computePriceTick } from "@/lib/priceEngine"
+import { computePriceTick } from "@/lib/priceEngine"
 
 export const dynamic = "force-dynamic"
 
@@ -25,14 +25,7 @@ async function runTick() {
 
   await Promise.all(
     PRODUCTS.map(async (product) => {
-      // Load current state from Redis
-      let currentPrice = await getCurrentPrice(product.id)
-      if (currentPrice === null) {
-        // First tick — initialize
-        currentPrice = initializePrice(product.originalPrice)
-        await setPrice(product.id, currentPrice)
-        await pushHistory(product.id, currentPrice)
-      }
+      let currentPrice = await getOrInitPrice(product.id, product.originalPrice)
 
       const flash           = await getFlash(product.id)
       const lastFlashTs     = await getLastFlashTime(product.id)

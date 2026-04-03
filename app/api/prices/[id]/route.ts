@@ -5,9 +5,7 @@
  */
 import { NextResponse } from "next/server"
 import { PRODUCTS } from "@/lib/data"
-import { getLivePrice, setPrice, pushHistory } from "@/lib/redis"
-import { initializePrice } from "@/lib/priceEngine"
-import { redis } from "@/lib/redis"
+import { getLivePrice, getOrInitPrice } from "@/lib/redis"
 
 export const dynamic = "force-dynamic"
 
@@ -24,13 +22,7 @@ export async function GET(_req: Request, { params }: Params) {
   }
 
   try {
-    // Lazy-initialize
-    const existing = redis ? await redis.get(`vaulted:price:${id}`) : null
-    if (existing === null) {
-      const startPrice = initializePrice(product.originalPrice)
-      await setPrice(id, startPrice)
-      await pushHistory(id, startPrice)
-    }
+    await getOrInitPrice(id, product.originalPrice)
 
     const live = await getLivePrice(id, product.originalPrice)
 
