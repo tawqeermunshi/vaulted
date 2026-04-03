@@ -1,27 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Product, formatPrice, getDiscount, CONDITION_LABELS } from "@/lib/data";
+import { Product, getDiscount, CONDITION_LABELS } from "@/lib/data";
+import LivePrice from "./LivePrice";
+import { getCurrentPrice } from "@/lib/redis";
+import { initializePrice } from "@/lib/priceEngine";
 
 interface ProductCardProps {
   product: Product;
   variant?: "default" | "compact";
+  initialPrice?: number;
 }
 
 export default function ProductCard({
   product,
   variant = "default",
+  initialPrice,
 }: ProductCardProps) {
   const discount = getDiscount(product.price, product.originalPrice);
+  const startPrice = initialPrice ?? product.price;
 
   return (
     <Link href={`/product/${product.id}`} className="group block">
       <div className="relative overflow-hidden bg-cream">
         {/* Image */}
-        <div
-          className={`relative overflow-hidden ${
-            variant === "compact" ? "aspect-[3/4]" : "aspect-[3/4]"
-          }`}
-        >
+        <div className="relative overflow-hidden aspect-[3/4]">
           <Image
             src={product.image}
             alt={product.name}
@@ -29,7 +31,6 @@ export default function ProductCard({
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           />
-          {/* Overlay on hover */}
           <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/10 transition-colors duration-300" />
 
           {/* Badges */}
@@ -46,41 +47,36 @@ export default function ProductCard({
             )}
           </div>
 
-          {/* Discount badge */}
+          {/* Static discount vs retail — always visible */}
           <div className="absolute top-3 right-3">
             <span className="bg-warm-white/95 text-charcoal text-[10px] font-medium px-2 py-1">
-              -{discount}%
+              -{discount}% retail
             </span>
           </div>
         </div>
 
         {/* Info */}
         <div className="pt-3 pb-1 px-0.5">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <p className="text-[10px] tracking-widest uppercase text-stone mb-0.5">
-                {product.brandDisplay}
-              </p>
-              <h3 className="text-sm font-medium text-charcoal leading-snug truncate">
-                {product.name}
-              </h3>
-              <p className="text-[11px] text-stone mt-0.5">
-                {product.color}
-                {product.size ? ` · ${product.size}` : ""}
-                {" · "}
-                {CONDITION_LABELS[product.condition]}
-              </p>
-            </div>
-          </div>
+          <p className="text-[10px] tracking-widest uppercase text-stone mb-0.5">
+            {product.brandDisplay}
+          </p>
+          <h3 className="text-sm font-medium text-charcoal leading-snug truncate">
+            {product.name}
+          </h3>
+          <p className="text-[11px] text-stone mt-0.5">
+            {product.color}
+            {product.size ? ` · ${product.size}` : ""}
+            {" · "}
+            {CONDITION_LABELS[product.condition]}
+          </p>
 
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-base font-medium text-charcoal">
-              {formatPrice(product.price)}
-            </span>
-            <span className="text-xs text-stone line-through">
-              {formatPrice(product.originalPrice)}
-            </span>
-          </div>
+          {/* Live price ticker */}
+          <LivePrice
+            productId={product.id}
+            basePrice={product.originalPrice}
+            initialPrice={startPrice}
+            variant="card"
+          />
 
           {/* Seller */}
           {variant === "default" && (
