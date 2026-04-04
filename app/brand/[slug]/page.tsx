@@ -34,7 +34,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
             <p className="mt-2 font-serif text-xl italic text-stone">
               {brand.tagline}
             </p>
-            <p className="mt-6 text-stone text-base leading-relaxed max-w-md">
+            <p className="mt-6 font-editorial-serif text-stone text-base leading-relaxed max-w-md tracking-wide">
               {brand.description}
             </p>
           </div>

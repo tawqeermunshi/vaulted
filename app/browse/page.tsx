@@ -201,7 +201,6 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
                   <ProductCard
                     key={product.id}
                     product={product}
-                    variant="compact"
                   />
                 ))}
               </div>

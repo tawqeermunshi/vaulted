@@ -1,28 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
-import MarketTicker from "@/components/MarketTicker";
-import VaultPricingExplainer from "@/components/VaultPricingExplainer";
-import TodaysMovers from "@/components/TodaysMovers";
+import FromTheVault from "@/components/FromTheVault";
+import StoriesWeLove from "@/components/StoriesWeLove";
+import TrustAndStorySection from "@/components/TrustAndStorySection";
 import { PRODUCTS, BRANDS } from "@/lib/data";
 import { HERO_EDITORIAL, SELL_CTA_IMAGE } from "@/lib/productImages";
 
 const FEATURED = PRODUCTS.filter((p) => p.featured).slice(0, 6);
-
-const BRAND_NAMES = [
-  "Hermès",
-  "Louis Vuitton",
-  "Chanel",
-  "Gucci",
-  "Prada",
-  "Christian Dior",
-  "Balenciaga",
-  "Saint Laurent",
-  "Bottega Veneta",
-  "Valentino",
-  "Fendi",
-  "Givenchy",
-];
 
 export default function HomePage() {
   return (
@@ -54,9 +39,9 @@ export default function HomePage() {
               <br />
               for less.
             </h1>
-            <p className="mt-8 text-stone-light text-lg md:text-xl leading-relaxed max-w-lg font-light">
-              Authenticated luxury from Hermès, Chanel, Louis Vuitton, and more
-              — available at 20–70% below retail.
+            <p className="mt-8 font-editorial-serif text-stone-light text-lg md:text-xl leading-relaxed max-w-lg tracking-wide">
+              Authenticated pre-loved luxury with a story on every listing — so your
+              first piece feels considered, not anonymous. Often 20–70% below retail.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <Link
@@ -102,8 +87,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* LIVE MARKET TICKER */}
-      <MarketTicker />
+      <FromTheVault />
 
       {/* EDITORIAL STATEMENT */}
       <section className="py-20 md:py-32 px-6 lg:px-12 max-w-7xl mx-auto">
@@ -119,14 +103,16 @@ export default function HomePage() {
             </h2>
           </div>
           <div>
-            <p className="text-stone-dark text-lg leading-relaxed mb-6">
+            <p className="font-editorial-serif text-stone-dark text-lg leading-relaxed mb-6 tracking-wide">
               A Birkin held once. A Chanel worn twice. These pieces deserve more
               than a wardrobe shelf. VAULTED curates authenticated pre-loved luxury
-              and prices it like a living market.
+              and shares the chapter each piece lived — so you buy with context, not
+              just a SKU.
             </p>
-            <p className="text-stone-dark text-base leading-relaxed">
+            <p className="font-editorial-serif text-stone-dark text-base leading-relaxed tracking-wide">
               Every item is expertly authenticated. We own our inventory before it
-              hits the site. Every purchase is protected. This is luxury resale done right.
+              hits the site. Every purchase is protected. This is luxury resale with
+              a human thread.
             </p>
           </div>
         </div>
@@ -169,11 +155,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* TODAY'S MOVERS */}
-      <TodaysMovers />
+      <StoriesWeLove />
 
-      {/* VAULT PRICING EXPLAINER */}
-      <VaultPricingExplainer />
+      <TrustAndStorySection />
 
       {/* HOW IT WORKS */}
       <section className="bg-cream py-20 md:py-28 px-6 lg:px-12">
@@ -251,7 +235,7 @@ export default function HomePage() {
                     {item.title}
                   </h3>
                 </div>
-                <p className="text-stone-dark text-sm leading-relaxed">
+                <p className="font-editorial-serif text-stone-dark text-sm leading-relaxed tracking-wide">
                   {item.body}
                 </p>
               </div>
@@ -342,7 +326,9 @@ export default function HomePage() {
                 <h3 className="font-serif text-xl text-warm-white mb-3">
                   {item.title}
                 </h3>
-                <p className="text-sm text-stone leading-relaxed">{item.body}</p>
+                <p className="font-editorial-serif text-sm text-stone leading-relaxed tracking-wide">
+                  {item.body}
+                </p>
               </div>
             ))}
           </div>
@@ -371,7 +357,7 @@ export default function HomePage() {
             <br />
             chapter here.
           </h2>
-          <p className="mt-8 text-stone-dark text-lg leading-relaxed max-w-lg mx-auto">
+          <p className="mt-8 font-editorial-serif text-stone-dark text-lg leading-relaxed max-w-lg mx-auto tracking-wide">
             List your luxury pieces and reach thousands of buyers who appreciate
             fine craftsmanship. We handle authentication, you receive the
             proceeds.

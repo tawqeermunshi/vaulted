@@ -1,21 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Product, getDiscount, CONDITION_LABELS } from "@/lib/data";
-import LivePrice from "./LivePrice";
+import { Product, getDiscount, CONDITION_LABELS, formatPrice, listingDisplayTitle } from "@/lib/data";
 
 interface ProductCardProps {
   product: Product;
-  variant?: "default" | "compact";
-  initialPrice?: number;
 }
 
 export default function ProductCard({
   product,
-  variant = "default",
-  initialPrice,
 }: ProductCardProps) {
   const discount = getDiscount(product.price, product.originalPrice);
-  const startPrice = initialPrice ?? product.price;
 
   return (
     <Link href={`/product/${product.id}`} className="group block">
@@ -58,23 +52,23 @@ export default function ProductCard({
           <p className="text-[10px] tracking-widest uppercase text-stone mb-0.5">
             {product.brandDisplay}
           </p>
-          <h3 className="text-sm font-medium text-charcoal leading-snug truncate">
-            {product.name}
+          <h3 className="font-serif text-sm font-light text-charcoal leading-snug line-clamp-2">
+            {listingDisplayTitle(product)}
           </h3>
-          <p className="text-[11px] text-stone mt-0.5">
+          <p className="text-[11px] text-stone mt-1 line-clamp-1" title={product.name}>
+            {product.name}
+          </p>
+          <p className="text-[11px] text-stone mt-1.5">
             {product.color}
             {product.size ? ` · ${product.size}` : ""}
             {" · "}
             {CONDITION_LABELS[product.condition]}
           </p>
 
-          {/* Live price ticker */}
-          <LivePrice
-            productId={product.id}
-            basePrice={product.originalPrice}
-            initialPrice={startPrice}
-            variant="card"
-          />
+          <div className="mt-2 flex items-baseline gap-2 flex-wrap">
+            <span className="text-base font-medium text-charcoal">{formatPrice(product.price)}</span>
+            <span className="text-xs text-stone line-through">{formatPrice(product.originalPrice)}</span>
+          </div>
         </div>
       </div>
     </Link>

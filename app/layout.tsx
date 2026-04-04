@@ -3,7 +3,6 @@ import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import FlashEventBanner from "@/components/FlashEventBanner";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -18,9 +17,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "VAULTED — Pre-Loved Luxury",
+  title: "VAULTED — Pre-Loved Luxury With a Story",
   description:
-    "Discover authenticated pre-loved luxury fashion from the world's most coveted houses. Hermès, Chanel, Louis Vuitton and more — at a fraction of retail.",
+    "Authenticated pre-loved luxury from Hermès, Chanel, Louis Vuitton and more. Every listing includes expert verification and a human story — confidence for first-time buyers.",
 };
 
 export default function RootLayout({
@@ -34,7 +33,6 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <FlashEventBanner />
       </body>
     </html>
   );

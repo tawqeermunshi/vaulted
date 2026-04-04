@@ -63,7 +63,7 @@ export default function SellPage() {
               <br />
               an audience.
             </h1>
-            <p className="mt-8 text-stone text-lg leading-relaxed max-w-md">
+            <p className="mt-8 font-editorial-serif text-stone text-lg leading-relaxed max-w-md tracking-wide">
               Reach thousands of discerning buyers. We authenticate your items,
               handle the payments, and ensure a seamless experience from listing
               to sale.
@@ -123,7 +123,7 @@ export default function SellPage() {
                 <h3 className="font-serif text-xl text-charcoal mt-2 mb-3">
                   {step.title}
                 </h3>
-                <p className="text-sm text-stone-dark leading-relaxed">
+                <p className="font-editorial-serif text-sm text-stone-dark leading-relaxed tracking-wide">
                   {step.body}
                 </p>
               </div>
@@ -259,7 +259,7 @@ export default function SellPage() {
               Submit Listing for Review
             </button>
 
-            <p className="text-[11px] text-stone text-center leading-relaxed">
+            <p className="font-editorial-serif text-[11px] text-stone text-center leading-relaxed tracking-wide">
               By submitting, you agree to our{" "}
               <Link
                 href="/terms"
@@ -289,7 +289,7 @@ export default function SellPage() {
             {FAQS.map((faq) => (
               <div key={faq.q} className="py-6">
                 <h3 className="font-medium text-charcoal mb-2">{faq.q}</h3>
-                <p className="text-sm text-stone-dark leading-relaxed">
+                <p className="font-editorial-serif text-sm text-stone-dark leading-relaxed tracking-wide">
                   {faq.a}
                 </p>
               </div>

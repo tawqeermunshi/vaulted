@@ -1,14 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PRODUCTS, CONDITION_LABELS } from "@/lib/data";
+import { PRODUCTS, CONDITION_LABELS, formatPrice, getDiscount, listingDisplayTitle } from "@/lib/data";
 import ProductCard from "@/components/ProductCard";
-import LivePrice from "@/components/LivePrice";
-import ViewRecorder from "@/components/ViewRecorder";
-import { getOrInitPrice } from "@/lib/redis";
-
-// Product detail is dynamic — price changes every tick
-export const dynamic = "force-dynamic";
+import ProductStory from "@/components/ProductStory";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -20,20 +15,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   if (!product) notFound();
 
-  // Fetch current price server-side for the initial render (no flash of wrong price)
-  const initialPrice = await getOrInitPrice(product.id, product.originalPrice);
-
   const related = PRODUCTS.filter(
     (p) =>
       p.id !== product.id &&
       (p.brand === product.brand || p.category === product.category)
   ).slice(0, 4);
 
+  const pctOff = getDiscount(product.price, product.originalPrice);
+
   return (
     <div className="pt-16 md:pt-20">
-      {/* Record this view for the demand signal */}
-      <ViewRecorder productId={product.id} />
-
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4">
         <nav className="flex items-center gap-2 text-[11px] tracking-wide text-stone">
@@ -105,8 +96,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </Link>
 
             <h1 className="font-serif text-3xl md:text-4xl font-light text-charcoal leading-tight">
-              {product.name}
+              {listingDisplayTitle(product)}
             </h1>
+            <p className="mt-2 text-sm text-stone tracking-wide">{product.name}</p>
 
             {/* Meta tags */}
             <div className="mt-4 flex flex-wrap gap-3">
@@ -124,21 +116,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
               )}
             </div>
 
-            {/* ── Live Price Block ──────────────────────────────────────── */}
-            <div className="mt-8">
-              <LivePrice
-                productId={product.id}
-                basePrice={product.originalPrice}
-                initialPrice={initialPrice}
-                variant="detail"
-              />
+            {/* Price */}
+            <div className="mt-8 p-5 bg-cream">
+              <div className="flex flex-wrap items-baseline justify-between gap-4">
+                <div>
+                  <span className="font-serif text-4xl font-light text-charcoal">{formatPrice(product.price)}</span>
+                  <div className="flex items-center gap-3 mt-2 flex-wrap">
+                    <span className="text-sm text-stone line-through">{formatPrice(product.originalPrice)}</span>
+                    <span className="text-xs text-stone">Save {pctOff}% vs retail</span>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            {/* Market note */}
-            <p className="mt-3 text-[10px] tracking-wide text-stone flex items-center gap-1.5">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-              Price updates live · refreshes every 5 min
-            </p>
 
             {/* CTA */}
             <div className="mt-6 flex flex-col gap-3">
@@ -156,22 +145,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
               ].map((item) => (
                 <div key={item.text} className="flex items-center gap-3">
                   <span className="text-base">{item.icon}</span>
-                  <span className="text-xs text-stone-dark">{item.text}</span>
+                  <span className="font-editorial-serif text-xs text-stone-dark tracking-wide">
+                    {item.text}
+                  </span>
                 </div>
               ))}
             </div>
+
+            <ProductStory product={product} />
 
             <div className="my-8 border-t border-stone-light/50" />
 
             {/* Description */}
             <div>
-              <h3 className="text-[10px] tracking-widest uppercase text-stone mb-3">Description</h3>
-              <p className="text-sm text-stone-dark leading-relaxed">{product.description}</p>
+              <h3 className="text-[10px] tracking-widest uppercase text-stone mb-3">Description &amp; condition</h3>
+              <p className="font-editorial-serif text-sm text-stone-dark leading-relaxed tracking-wide">
+                {product.description}
+              </p>
             </div>
 
             <div className="mt-8 p-4 border border-stone-light/50 bg-cream/30">
               <h3 className="text-[10px] tracking-widest uppercase text-stone mb-2">VAULTED inventory</h3>
-              <p className="text-xs text-stone-dark leading-relaxed">
+              <p className="font-editorial-serif text-xs text-stone-dark leading-relaxed tracking-wide">
                 We acquire, authenticate, and list every piece ourselves — so you shop curated stock with a single standard of quality.
               </p>
             </div>
@@ -189,7 +184,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
               {related.map((p) => (
-                <ProductCard key={p.id} product={p} variant="compact" />
+                <ProductCard key={p.id} product={p} />
               ))}
             </div>
           </div>

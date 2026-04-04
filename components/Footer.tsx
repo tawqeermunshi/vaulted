@@ -28,7 +28,7 @@ const COMPANY_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="bg-charcoal text-warm-white">
+    <footer className="font-sans bg-charcoal text-warm-white">
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
@@ -40,7 +40,7 @@ export default function Footer() {
             >
               Vaulted
             </Link>
-            <p className="mt-4 text-stone text-sm leading-relaxed max-w-xs">
+            <p className="mt-4 font-editorial-serif text-stone text-sm leading-relaxed max-w-xs tracking-wide">
               The destination for authenticated pre-loved luxury. Every piece
               verified. Every listing curated by us. Every purchase guaranteed.
             </p>
