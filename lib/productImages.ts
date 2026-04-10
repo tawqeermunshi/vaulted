@@ -8,76 +8,94 @@ export type ListingCategory =
   | "jewelry";
 
 /**
- * Unsplash — hotlinked per their guidelines. Each listing uses a unique,
- * candid moment: weddings, receptions, hands, street ceremonies, dance floor,
- * getting-ready energy — not catalog flat-lays.
+ * Listing art = the **category product** clearly in frame, in a lived moment when possible
+ * (street, travel, getting ready, celebration, boutique), not empty scenery or generic crowds.
+ *
+ * Unsplash / Pexels — hotlink per each platform’s guidelines.
  */
 export const u = (id: string) =>
   `https://images.unsplash.com/${id}?ixlib=rb-4.1.0&auto=format&fit=crop&w=900&q=85`;
 
+/** Same photo, different focal crop — varies grids without losing the same story beat. */
+export const uF = (id: string, fpX: number, fpY: number) =>
+  `${u(id)}&fp-x=${fpX}&fp-y=${fpY}`;
+
+export const p = (id: string) =>
+  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=900`;
+
 /**
- * One image per catalog `id` ("1"…"45") so grids never repeat the same frame.
- * Verified HTTP 200 with ixlib=rb-4.1.0 as of integration.
+ * One URL per catalog `id` ("1"…"45"). Keys align with `lib/data.ts` product ids.
  */
 export const STORY_FIRST_LISTING_IMAGES: Record<string, string> = {
-  "1": u("photo-1761211488173-a7154314420a"), // tender moment — celebration
-  "2": u("photo-1771315023021-c9f3c45b1e05"), // reception — shared plate, candid
-  "3": u("photo-1519741497674-611481863552"), // ceremony arch — guests, real day
-  "4": u("photo-1773219382308-ac76a2d798fd"), // couple in wedding attire — street
-  "5": u("photo-1760669346716-f9f1e9b089fb"), // couple — quiet joy
-  "6": u("photo-1759308730169-9156cb9fe8fe"), // outdoor ceremony — hands
-  "7": u("photo-1775126964327-aae7ba8d4259"), // shoe raised — crowded celebration
-  "8": u("photo-1748260526938-4fa5472eb796"), // dance floor — disco light
-  "9": u("photo-1679599423066-c419b4b16ce9"), // two wedding bands — close
-  "10": u("photo-1626619485175-904897294d80"), // ring on finger — soft light
-  "11": u("photo-1606216794074-735e91aa2c92"), // couple — laughter, outdoor celebration
-  "12": u("photo-1660946213643-abfb452e04b3"), // bouquet in hand
-  "13": u("photo-1765871905607-3676540588b0"), // family walking — outdoor
-  "14": u("photo-1602969975150-24262038bbcb"), // wrists — bracelets, personal
-  "15": u("photo-1722078514112-8fc9f3dc332e"), // table detail — reception
-  "16": u("photo-1775126964349-182e59bf6962"), // running together — unposed
-  "17": u("photo-1773219382308-aba75ad02fd6"), // wedding attire — city walk
-  "18": u("photo-1507313398864-ae061f43d184"), // intertwined hands
-  "19": u("photo-1613637819407-98ac477ba128"), // ring — intimate, monochrome mood
-  "20": u("photo-1522142257700-1445b61b6142"), // bride & groom hands
-  "21": u("photo-1551095597-b6c007a2150d"), // two hands — gentle hold
-  "22": u("photo-1483985988355-763728e1935b"), // shopping street — real life
-  "23": u("photo-1529139574466-a303027c1d8b"), // friends — urban candid
-  "24": u("photo-1512436991641-6745cdb1723f"), // fashion in motion — editorial real
-  "25": u("photo-1496747611176-843222e1e57c"), // street style — daylight
-  "26": u("photo-1600185365483-26d7a4cc7519"), // bag in hand — lifestyle context
-  "27": u("photo-1594633312681-425c7b97ccd1"), // wardrobe moment — personal
-  "28": u("photo-1558618666-fcd25c85cd64"), // toast — glasses, gathering
-  "29": u("photo-1522673607200-164d1b6ce486"), // getting-ready energy — dress & light
-  "30": u("photo-1594223274512-ad4803739b7c"), // city fashion — candid stride
-  "31": u("photo-1503342217505-b0a15ec3261c"), // show / crowd — occasion dressing
-  "32": u("photo-1522335789203-aabd1fc54bc9"), // portrait — soft editorial
-  "33": u("photo-1515886657613-9f3515b0c78f"), // full-length — confident pose
-  "34": u("photo-1469334031218-e382a71b716b"), // outdoor fashion — wind & fabric
-  "35": u("photo-1434389677669-e08b4cac3105"), // fabric & silhouette — tactile
-  "36": u("photo-1543163521-1bf539c55dd2"), // accessories flat — still personal styling
-  "37": u("photo-1553062407-98eeb64c6a62"), // leather goods — warm still life
-  "38": u("photo-1590874103328-eac38a683ce7"), // product in lived interior
-  "39": u("photo-1539533018447-63fcce2678e3"), // editorial stack — curated life
-  "40": u("photo-1620799140408-edc6dcb6d633"), // detail shot — craft & texture
-  "41": u("photo-1594633313593-bab3825d0caf"), // boutique light — discovery
-  "42": u("photo-1664918189510-d752244761c1"), // couple holding hands — walk
-  "43": u("photo-1657425991870-421806ec0569"), // hands & ring — quiet focus
-  "44": u("photo-1601925260368-ae2f83cf8b7f"), // fashion editorial — moody personal
-  "45": u("photo-1490481651871-ab68de25d43d"), // closet / rail — second life, real wardrobe
+  // Bags — handbag / tote / backpack clearly visible
+  "1": u("photo-1496747611176-843222e1e57c"), // woven bag, sea light
+  "2": u("photo-1483985988355-763728e1935b"), // arms full of shopping bags
+  "3": u("photo-1594633313593-bab3825d0caf"), // croc-embossed bag, model
+  "4": u("photo-1594223274512-ad4803739b7c"), // teal bag, desk moment
+  "5": u("photo-1584917865442-de89df76afd3"), // structured color bag
+  "6": u("photo-1590874103328-eac38a683ce7"), // woven + leather bag, window light
+  "11": u("photo-1539109136881-3be0616acf4b"), // crossbody, Milan square
+  "12": u("photo-1441986300917-64674bd600d8"), // boutique, bags on shelves
+  "15": u("photo-1553062407-98eeb64c6a62"), // backpack, quiet interior
+  "16": p("5418957"), // shoulder bag, fitting-room energy
+  "20": p("13924894"), // large tote with model
+  "24": p("1152077"), // messenger bag, warm leather
+  "26": uF("photo-1496747611176-843222e1e57c", 0.35, 0.6),
+  "30": uF("photo-1496747611176-843222e1e57c", 0.65, 0.45),
+  "31": uF("photo-1483985988355-763728e1935b", 0.4, 0.55),
+  "33": uF("photo-1594633313593-bab3825d0caf", 0.5, 0.35),
+  "39": uF("photo-1539109136881-3be0616acf4b", 0.55, 0.45),
+  "41": uF("photo-1594223274512-ad4803739b7c", 0.45, 0.35),
+  "44": uF("photo-1584917865442-de89df76afd3", 0.5, 0.5),
+  "45": uF("photo-1441986300917-64674bd600d8", 0.5, 0.4),
+
+  // Shoes — footwear is the hero (on foot or styled as shoes)
+  "7": u("photo-1460353581641-37baddab0fa2"), // Nike on asphalt
+  "8": u("photo-1515886657613-9f3515b0c78f"), // white boots, court
+  "13": u("photo-1543163521-1bf539c55dd2"), // floral heels
+  "17": u("photo-1549298916-b41d501d3772"), // sneaker, fabric backdrop
+  "19": u("photo-1525966222134-fcfa99b8ae77"), // low-top sneaker
+  "21": u("photo-1542291026-7eec264c27ff"), // running shoe
+  "22": u("photo-1620799140408-edc6dcb6d633"), // heels on display
+  "35": u("photo-1606107557195-0e29a4b5b4aa"), // bright trainer
+  "36": uF("photo-1460353581641-37baddab0fa2", 0.5, 0.75),
+  "38": uF("photo-1515886657613-9f3515b0c78f", 0.5, 0.65),
+
+  // Belts — waist belt visible
+  "9": p("4937224"),
+  "10": p("4937225"),
+  "34": p("1927251"), // winter outing, leather belt on suit
+
+  // Jewelry — rings, stacks, watch
+  "14": u("photo-1515934751635-c81c6bc9a2d8"), // bands on bouquet
+  "23": u("photo-1596944924616-7b38e7cfac36"), // gold on skin
+  "43": u("photo-1490367532201-b9bc1dc483f6"), // watch + cuffs, getting ready
+
+  // Accessories — sunglasses, small goods, watch in context
+  "18": u("photo-1621184455862-c163dfb30e0f"), // mirrored sunnies, laugh
+  "28": u("photo-1469334031218-e382a71b716b"), // sunnies + stacks
+  "29": u("photo-1529139574466-a303027c1d8b"), // bold sunnies, sky
+  "32": u("photo-1596462502278-27bfdc403348"), // earrings in flat moment
+  "37": u("photo-1515562141207-7a88fb7ce338"), // layered jewelry flat
+  "40": u("photo-1507679799987-c73779587ccf"), // dress watch, suiting
+
+  // Clothing — garment is the focus
+  "25": u("photo-1595777457583-95e059d581b8"), // gown, twirl outdoors
+  "27": u("photo-1594633312681-425c7b97ccd1"), // trousers fit
+  "42": u("photo-1591047139829-d91aecb6caea"), // jacket, hand on hanger
 };
 
-/** Fallback pool if an id is missing from the map (should not happen for current catalog). */
 const BAGS = [
-  u("photo-1600185365483-26d7a4cc7519"),
-  u("photo-1594633312681-425c7b97ccd1"),
+  u("photo-1496747611176-843222e1e57c"),
+  u("photo-1539109136881-3be0616acf4b"),
+  p("5418957"),
 ] as const;
 
-const SHOES = [u("photo-1775126964327-aae7ba8d4259"), u("photo-1748260526938-4fa5472eb796")] as const;
-const BELTS = [u("photo-1679599423066-c419b4b16ce9"), u("photo-1626619485175-904897294d80")] as const;
-const ACCESSORIES = [u("photo-1543163521-1bf539c55dd2"), u("photo-1553062407-98eeb64c6a62")] as const;
-const JEWELRY = [u("photo-1602969975150-24262038bbcb"), u("photo-1613637819407-98ac477ba128")] as const;
-const CLOTHING = [u("photo-1522673607200-164d1b6ce486"), u("photo-1515886657613-9f3515b0c78f")] as const;
+const SHOES = [u("photo-1460353581641-37baddab0fa2"), u("photo-1543163521-1bf539c55dd2")] as const;
+const BELTS = [p("4937224"), p("4937225")] as const;
+const ACCESSORIES = [u("photo-1621184455862-c163dfb30e0f"), u("photo-1515562141207-7a88fb7ce338")] as const;
+const JEWELRY = [u("photo-1515934751635-c81c6bc9a2d8"), u("photo-1596944924616-7b38e7cfac36")] as const;
+const CLOTHING = [u("photo-1595777457583-95e059d581b8"), u("photo-1591047139829-d91aecb6caea")] as const;
 
 const BY_CATEGORY: Record<ListingCategory, readonly string[]> = {
   bags: BAGS,
@@ -98,10 +116,10 @@ export function listingPhoto(category: ListingCategory, productId: string): stri
   return pool[idx]!;
 }
 
-/** Homepage hero — celebration, human scale, not a stock product grid. */
+/** Homepage hero — celebration, human scale. */
 export const HERO_EDITORIAL =
-  "https://images.unsplash.com/photo-1758810411287-a362740f269e?ixlib=rb-4.1.0&auto=format&fit=crop&w=1920&q=82";
+  "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.1.0&auto=format&fit=crop&w=1920&q=82";
 
-/** Sell CTA — hands & bouquet, “next chapter” energy. */
+/** Sell CTA — hands & bouquet. */
 export const SELL_CTA_IMAGE =
   "https://images.unsplash.com/photo-1684244276932-6ae853774c4d?ixlib=rb-4.1.0&auto=format&fit=crop&w=1600&q=82";
